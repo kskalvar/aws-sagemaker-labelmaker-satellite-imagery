@@ -1,0 +1,50 @@
+#cloud-config
+
+write_files:
+  - content: |
+        #!/bin/sh
+
+        echo "installation start" > /tmp/install-label-maker
+        echo "installing required os packages" >> /tmp/install-label-maker
+
+        apt-get update
+        apt-get -y install build-essential
+        apt-get -y install libssl-dev
+        apt-get -y install libsqlite3-dev zlib1g-dev
+        apt-get -y install libcurl4-openssl-dev
+        apt-get -y install awscli
+
+        echo "installing python 3.6" >> /tmp/install-label-maker
+
+        cd /opt
+        wget https://www.python.org/ftp/python/3.6.3/Python-3.6.3.tgz
+        tar -xvf Python-3.6.3.tgz
+ 
+        cd Python-3.6.3
+        ./configure
+        make 
+        make install
+ 
+        update-alternatives --install /usr/bin/python python /usr/local/bin/python3.6 1
+        apt-get -y install python-pip
+ 
+        echo "installing tippecanoe" >> /tmp/install-label-maker
+
+        cd /opt
+        git clone https://github.com/mapbox/tippecanoe.git
+        cd tippecanoe/
+        make
+        make install
+ 
+        echo "installing label_maker" >> /tmp/install-label-maker
+
+        pip install label_maker
+
+        echo "installation complete" >> /tmp/install-label-maker
+
+        echo "See /var/log/cloud-init-output.log" >> /tmp/install-label-maker
+    path: /tmp/start.sh
+    permissions: 0755
+
+runcmd:
+  - /tmp/start.sh
