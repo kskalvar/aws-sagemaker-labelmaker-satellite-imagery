@@ -1,4 +1,4 @@
-AWS SageMaker Labelmaker Satellite Imagery  
+Using AWS SageMaker/Labelmaker to process Satellite Imagery  
 ===========================================
 
 This solution shows how to process map imagery using AWS SageMaker and Labelmaker to build an AI Model to predict buildings. This readme updates an article "Use Label Maker and Amazon SageMaker to automatically map buildings in Vietnam" by ZHUANGFANG NANA YI referenced below and provides a more basic step by step process.
@@ -17,7 +17,7 @@ Click on "Launch Instance"
 
 Choose AMI
 ```
-Ubuntu Server 16.04 LTS
+Ubuntu Server 16.04 LTS (ami-43a15f3e)
 ```  
 Click on "Select"
 
@@ -63,23 +63,18 @@ See contents of "/tmp/install-label-maker" it should say "installation complete"
 
 ### Download the labelmaker json configuration file
 
-Download vietname.json and replace ```<ACCESS TOKEN>``` with API Key you created in your Mapbox Account.  
-wget https://raw.githubusercontent.com/kskalvar/aws-sagemaker-labelmaker-satellite-imagery/master/labelmaker-config/vietnam.json  
+Download config.json and replace ```<ACCESS TOKEN>``` with API Key you created in your Mapbox Account.
+wget https://raw.githubusercontent.com/kskalvar/aws-sagemaker-labelmaker-satellite-imagery/master/labelmaker-config/config.json  
 
-### Preprocess satellite imagery using labelmaker
+### Preprocess Satellite Imagery using Labelmaker
 
 Run the following label-maker commands:
 ```
-label-maker download --dest vietnam_building --config vietnam.json
-label-maker labels --dest vietnam_building --config vietnam.json
-label-maker preview -n 10 --dest vietnam_building --config vietnam.json
-label-maker images --dest vietnam_building --config vietnam.json
-label-maker package --dest vietnam_building --config vietnam.json
-
-Note: You will likely see a couple of errors similar to the following:
-OSError: cannot identify image file 'vietnam_building/tiles/104171-57805-17.jpg'
-rm vietnam_building/tiles/104171-57805-17.jpg 
-rerun package command
+label-maker download
+label-maker labels
+label-maker preview
+label-maker images
+label-maker package
 ```
 
 ### Configure AWS CLI and copy results to S3
@@ -87,9 +82,12 @@ aws configure
 ```
 AWS Access Key ID []:
 AWS Secret Access Key []:
+
+Note: data-754487812300 should be replaced with your AWS Account Number.  Example: data-<Your AWS Account Number>
+
+aws s3api create-bucket --bucket data-754487812300 --region us-east-1  
+aws s3 cp data s3://data-754487812300 --recursive
 ```
-aws s3api create-bucket --bucket mybucket-labelmaker --region us-east-1  
-aws s3 cp vietnam_building  s3://mybucket-labelmaker --recursive
 
 ## Configure AWS SageMaker
 Use the AWS Console to configure a SageMaker Instance for processing map data.  This is a step by step process.
@@ -102,21 +100,26 @@ IAM Role: Create a new role
 ```
 S3 buckets you specify:
 Select Specific S3 buckets
-Enter: mybucket-labelmaker
+Enter: data-754487812300
 Click on "Create role"
 ```
 Click on "Create notebook instance"
 
 #### Display Notebook instances using the SageMaker Dashboard
-Notebook instances  
+Notebook/Notebook instances  
 Name: labelmaker  
-Action: Open  
+Action: Open  # it will show pending until it's ready to open
 
-This should open the Jupyter Notebook in a new tab on your browser.
+This will open the Jupyter Notebook in a new tab on your browser.
 
-#### Upload SageMaker_mx-lenet.ipynb Jupyter Notebook
+#### Upload Jupyter Notebook
+
+Click on "Upload" and Select "SageMaker_mx-lenet.ipynb" from project jupyter-notebook directory 
+
 Once the notebook is uploaded, click on the notebook to open it.  
 Run each cell Step by Step
+
+Note: data-754487812300 should be replaced with your AWS Account Number in some of the cells.  Example: data-<Your AWS Account Number> to match your S3 bucket above.
 
 
 ## References
