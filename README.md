@@ -85,10 +85,10 @@ aws configure
 AWS Access Key ID []:
 AWS Secret Access Key []:
 
-Note: data-754487812300 should be replaced with your AWS Account Number.  Example: data-<Your AWS Account Number>
+Note: Replaced with your AWS Account Number.  Example: data-<Your AWS Account Number>
 
-aws s3api create-bucket --bucket data-754487812300 --region us-east-1  
-aws s3 cp data s3://data-754487812300 --recursive
+aws s3api create-bucket --bucket data-<Your AWS Account Number> --region us-east-1  
+aws s3 cp data s3://data-<Your AWS Account Number> --recursive
 ```
 
 ## Configure AWS SageMaker
