@@ -63,8 +63,10 @@ See contents of "/tmp/install-label-maker" it should say "installation complete"
 
 ### Download the labelmaker json configuration file
 
-Download config.json and replace ```<ACCESS TOKEN>``` with API Key you created in your Mapbox Account.
+Download config.json and replace ```<ACCESS TOKEN>``` with API Key you created in your Mapbox Account.  
+```
 wget https://raw.githubusercontent.com/kskalvar/aws-sagemaker-labelmaker-satellite-imagery/master/labelmaker-config/config.json  
+```
 
 ### Preprocess Satellite Imagery using Labelmaker
 
@@ -100,7 +102,7 @@ IAM Role: Create a new role
 ```
 S3 buckets you specify:
 Select Specific S3 buckets
-Enter: data-754487812300
+Enter: data-<Your AWS Account Number>
 Click on "Create role"
 ```
 Click on "Create notebook instance"
@@ -119,7 +121,7 @@ Click on "Upload" and Select "SageMaker_mx-lenet.ipynb" from project jupyter-not
 Once the notebook is uploaded, click on the notebook to open it.  
 Run each cell Step by Step
 
-Note: data-754487812300 should be replaced with your AWS Account Number in some of the cells.  Example: data-<Your AWS Account Number> to match your S3 bucket above.
+Note: data-754487812300 should be replaced with your AWS Account Number in some of the cells.  Example: ```data-<Your AWS Account Number>``` to match your S3 bucket above.
 
 
 ## References
