@@ -38,11 +38,14 @@ write_files:
  
         echo "installing label_maker" >> /tmp/install-label-maker
 
-        pip install label_maker
+        cd /opt
+        git clone https://github.com/developmentseed/label-maker.git
+        cd label-maker
+        pip install -r requirements-dev.txt
+        pip install -e .
 
-        echo "installation complete" >> /tmp/install-label-maker
+        echo "installation complete. See /var/log/cloud-init-output.log" >> /tmp/install-label-maker
 
-        echo "See /var/log/cloud-init-output.log" >> /tmp/install-label-maker
     path: /tmp/start.sh
     permissions: 0755
 
